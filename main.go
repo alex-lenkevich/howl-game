@@ -1,4 +1,4 @@
-package main
+package howl_game
 
 import (
 	"log"
