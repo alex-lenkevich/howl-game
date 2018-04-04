@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"fmt"
 	"os"
-	"./game"
+	"github.com/alex-lenkevich/howl-game/game"
 	"io/ioutil"
 )
 
