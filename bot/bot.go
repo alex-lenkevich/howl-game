@@ -7,6 +7,8 @@ import (
 	"bytes"
 	"io"
 	"log"
+	"strings"
+	"io/ioutil"
 )
 
 type WebhookRequest struct {
@@ -33,7 +35,15 @@ func InitWebhook(url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sendRequest("getUpdates", bytes.NewReader(reqBody))
+	sendRequest("setWebhook", bytes.NewReader(reqBody))
+	resp, err := sendRequest("getWebhookInfo", strings.NewReader("{}"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	log.Printf(string(body))
 }
 
 func ProcessUpdates(body []byte) []Update {
@@ -41,7 +51,7 @@ func ProcessUpdates(body []byte) []Update {
 	var updatesMap map[string]interface{}
 
 	if err := json.Unmarshal(body, &updatesMap); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	list := updatesMap["result"].([]interface{})
