@@ -19,7 +19,7 @@ func NewGame(db *DB) Game {
 func (game Game) ProcessMessage(act Act) (Result, error) {
 	var result Result
 	_, err := game.Db.LoadStats(act.Player)
-	if act.Action == "/newgame" || err == mgo.ErrNotFound {
+	if act.Action == "/start" || err == mgo.ErrNotFound {
 		stats, err := game.StartGame(act.Player)
 		if err != nil {
 			return result, err
