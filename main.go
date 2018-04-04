@@ -33,6 +33,7 @@ func newMessage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("Got update %s", string(body))
 	updates := bot.ProcessUpdates(body)
 	for _, update := range updates {
 		if update.Text == "ping" {

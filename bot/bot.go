@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"bytes"
 	"io"
+	"log"
 )
 
 type WebhookRequest struct {
@@ -28,7 +29,10 @@ type OutMessage struct {
 }
 
 func InitWebhook(url string) {
-	reqBody, _ := json.Marshal(WebhookRequest{url})
+	reqBody, err := json.Marshal(WebhookRequest{url})
+	if err != nil {
+		log.Fatal(err)
+	}
 	sendRequest("getUpdates", bytes.NewReader(reqBody))
 }
 
@@ -57,8 +61,14 @@ func ProcessUpdates(body []byte) []Update {
 }
 
 func SendMessage(to int64, msg string) {
-	body, _ := json.Marshal(OutMessage{to, msg})
-	resp, _ := sendRequest("sendMessage", bytes.NewReader(body))
+	body, err := json.Marshal(OutMessage{to, msg})
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := sendRequest("sendMessage", bytes.NewReader(body))
+	if err != nil {
+		log.Fatal(err)
+	}
 	resp.Body.Close()
 }
 
