@@ -1,30 +1,35 @@
 package main
 
 import (
+	"log"
+	"net/http"
 	"fmt"
-
-	"github.com/alex-lenkevich/howl-game/bot"
-	"time"
 )
 
 func main() {
 
-	fmt.Printf("hello, world\n")
-	var offset int64
+	//var offset int64
 
-	for i := 0; i < 100; i++ {
-		updates := bot.GetUpdates(offset)
-		fmt.Println(offset)
-		fmt.Println(updates)
-		for _, v := range updates {
-			offset = v.Id + 1
-			if v.Text == "ping" {
-				bot.SendMessage(bot.OutMessage{v.From, "pong"})
-			}
-		}
-		time.Sleep(1000000)
-	}
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
+	//for i := 0; i < 100000; i++ {
+	//	log.Println("Getting updates...")
+	//	updates := bot.GetUpdates(offset)
+	//	log.Printf("Got updates %+v", updates)
+	//	for _, v := range updates {
+	//		offset = v.Id + 1
+	//		if v.Text == "ping" {
+	//			bot.SendMessage(bot.OutMessage{v.From, "pong"})
+	//		}
+	//	}
+	//	time.Sleep(1000000)
+	//}
+
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "<h1>Hello world</h1>`")
 }
 
 
