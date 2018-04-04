@@ -46,28 +46,20 @@ func InitWebhook(url string) {
 	log.Printf(string(body))
 }
 
-func ProcessUpdates(body []byte) []Update {
+func ProcessUpdates(body []byte) Update {
 
-	var updatesMap map[string]interface{}
+	var updateJson map[string]interface{}
 
-	if err := json.Unmarshal(body, &updatesMap); err != nil {
+	if err := json.Unmarshal(body, &updateJson); err != nil {
 		log.Fatal(err)
 	}
 
-	list := updatesMap["result"].([]interface{})
+	messageSrc := updateJson["message"].(map[string]interface{})
+	id := int64(updateJson["update_id"].(float64))
+	from := int64(messageSrc["from"].(map[string]interface{})["id"].(float64))
+	text := messageSrc["text"].(string)
 
-	var updates []Update
-
-	for _, update := range list {
-		updateSrc := update.(map[string]interface{})
-		messageSrc := updateSrc["message"].(map[string]interface{})
-		id := int64(updateSrc["update_id"].(float64))
-		from := int64(messageSrc["from"].(map[string]interface{})["id"].(float64))
-		text := messageSrc["text"].(string)
-		updates = append(updates, Update{id, text, from})
-	}
-
-	return updates
+	return Update{id, text, from}
 }
 
 func SendMessage(to int64, msg string) {

@@ -29,16 +29,15 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func newMessage(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+	defer w.Write([]byte{})
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Got update %s", string(body))
-	updates := bot.ProcessUpdates(body)
-	for _, update := range updates {
-		if update.Text == "ping" {
-			bot.SendMessage(update.From, "pong")
-		}
+	update := bot.ProcessUpdates(body)
+	if update.Text == "ping" {
+		bot.SendMessage(update.From, "pong")
 	}
 }
 
