@@ -4,16 +4,19 @@ import (
 	"log"
 	"net/http"
 	"fmt"
+	"os"
 )
 
 func main() {
 
 	//var offset int64
 
+	port := os.Getenv("PORT")
+
 	log.Println("Started!!!")
 
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":" + port, nil))
 
 	//for i := 0; i < 100000; i++ {
 	//	log.Println("Getting updates...")
