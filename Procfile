@@ -1,1 +1,1 @@
-web: go run cmd/main
+web: howl-game
