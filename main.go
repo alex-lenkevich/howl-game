@@ -13,9 +13,9 @@ func main() {
 
 	//var offset int64
 
-	bot.InitWebhook("https://agile-waters-36090.herokuapp.com/updatesHook")
+	bot.InitWebhook("https://howlbot.herokuapp.com/updatesHook")
 
-	http.HandleFunc("/", hello)
+	http.HandleFunc("/", healthcheck)
 	http.HandleFunc("/updatesHook", newMessage)
 	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 
@@ -23,7 +23,7 @@ func main() {
 
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func healthcheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Hello world</h1>")
 }
 
