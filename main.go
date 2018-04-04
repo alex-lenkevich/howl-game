@@ -10,6 +10,8 @@ func main() {
 
 	//var offset int64
 
+	log.Println("Started!!!")
+
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
