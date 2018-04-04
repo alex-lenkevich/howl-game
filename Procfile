@@ -1,1 +1,1 @@
-web: cmd/main
+web: go run cmd/main
