@@ -5,11 +5,14 @@ import (
 	"net/http"
 	"fmt"
 	"os"
+	"github.com/alex-lenkevich/howl-game/bot"
 )
 
 func main() {
 
 	//var offset int64
+
+	bot.InitWebhook("https://howlbot.herokuapp.com/updates")
 
 	port := os.Getenv("PORT")
 
@@ -34,7 +37,7 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "<h1>Hello world</h1>`")
+	fmt.Fprint(w, "<h1>Hello world</h1>")
 }
 
 

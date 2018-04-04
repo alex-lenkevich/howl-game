@@ -9,6 +9,10 @@ import (
 	"io"
 )
 
+type WebhookRequest struct {
+	Url string `json:"url"`
+}
+
 type UpdateRequest struct {
 	Offset int64 `json:"offset"`
 }
@@ -22,6 +26,11 @@ type Update struct {
 type OutMessage struct {
 	Subject int64 `json:"chat_id"`
 	Text string `json:"text"`
+}
+
+func InitWebhook(url string) {
+	reqBody, _ := json.Marshal(WebhookRequest{url})
+	sendRequest("getUpdates", bytes.NewReader(reqBody))
 }
 
 func GetUpdates(from int64) []Update {
