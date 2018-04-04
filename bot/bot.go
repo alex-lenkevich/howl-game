@@ -3,7 +3,6 @@ package bot
 import (
 	"net/http"
 	"fmt"
-	"io/ioutil"
 	"encoding/json"
 	"bytes"
 	"io"
@@ -33,14 +32,7 @@ func InitWebhook(url string) {
 	sendRequest("getUpdates", bytes.NewReader(reqBody))
 }
 
-func GetUpdates(from int64) []Update {
-	reqBody, _ := json.Marshal(UpdateRequest{from})
-
-	resp, _ := sendRequest("getUpdates", bytes.NewReader(reqBody))
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	fmt.Printf("%s\n", body)
+func ProcessUpdates(body []byte) []Update {
 
 	var updatesMap map[string]interface{}
 
@@ -64,8 +56,8 @@ func GetUpdates(from int64) []Update {
 	return updates
 }
 
-func SendMessage(msg OutMessage) {
-	body, _ := json.Marshal(msg)
+func SendMessage(to int64, msg string) {
+	body, _ := json.Marshal(OutMessage{to, msg})
 	resp, _ := sendRequest("sendMessage", bytes.NewReader(body))
 	resp.Body.Close()
 }

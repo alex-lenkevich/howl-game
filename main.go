@@ -6,38 +6,39 @@ import (
 	"fmt"
 	"os"
 	"github.com/alex-lenkevich/howl-game/bot"
+	"io/ioutil"
 )
 
 func main() {
 
 	//var offset int64
 
-	bot.InitWebhook("https://howlbot.herokuapp.com/updates")
+	bot.InitWebhook("https://agile-waters-36090.herokuapp.com/updatesHook")
 
-	port := os.Getenv("PORT")
+	http.HandleFunc("/", hello)
+	http.HandleFunc("/updatesHook", newMessage)
+	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 
 	log.Println("Started!!!")
 
-	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":" + port, nil))
-
-	//for i := 0; i < 100000; i++ {
-	//	log.Println("Getting updates...")
-	//	updates := bot.GetUpdates(offset)
-	//	log.Printf("Got updates %+v", updates)
-	//	for _, v := range updates {
-	//		offset = v.Id + 1
-	//		if v.Text == "ping" {
-	//			bot.SendMessage(bot.OutMessage{v.From, "pong"})
-	//		}
-	//	}
-	//	time.Sleep(1000000)
-	//}
-
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Hello world</h1>")
+}
+
+func newMessage(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	updates := bot.ProcessUpdates(body)
+	for _, update := range updates {
+		if update.Text == "ping" {
+			bot.SendMessage(update.From, "pong")
+		}
+	}
 }
 
 
