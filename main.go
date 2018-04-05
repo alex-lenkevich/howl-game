@@ -29,8 +29,8 @@ func main() {
 	gm = game.NewGame(db)
 	//var offset int64
 
-	game.InitWebhook("https://howlbot.herokuapp.com/updatesHook")
-	//game.InitWebhook("https://oleksandrlinkevich.fwd.wf/updatesHook")
+	// game.InitWebhook("https://howlbot.herokuapp.com/updatesHook")
+	game.InitWebhook("https://arlabunakty.fwd.wf/updatesHook")
 
 	http.HandleFunc("/", healthcheck)
 	http.HandleFunc("/updatesHook", newMessage)
@@ -57,7 +57,7 @@ func newMessage(w http.ResponseWriter, r *http.Request) {
 		game.SendMessage(update.From, "pong")
 		return
 	}
-	result, err := gm.ProcessMessage(game.Act{Player: update.From, Action: update.Text})
+	result, err := gm.ProcessMessage(game.Act{Player: update.From, Command: game.ParseCommand(update.Text)})
 	if err != nil {
 		game.SendMessage(update.From, "ERROR")
 		log.Fatal(err)

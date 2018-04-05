@@ -42,5 +42,3 @@ func (db DB) LoadStats(player int64) (Stats, error) {
 	err := db.database.C("playerstats").Find(bson.M{"player": player}).One(&stats)
 	return stats, err
 }
-
-
