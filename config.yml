@@ -1,0 +1,9 @@
+prod:
+  serverUrl: "https://howlbot.herokuapp.com"
+  botToken: "bot589672797:AAFWeN_wUc7v206dIdFceK_6VjmB9C68O6Q"
+dev1:
+  serverUrl: "https://oleksandrlinkevich.fwd.wf"
+  botToken: "bot589672797:AAFWeN_wUc7v206dIdFceK_6VjmB9C68O6Q"
+dev2:
+  serverUrl: "https://arlabunakty.fwd.wf"
+  botToken: "554108831:AAHhXZmzJO_w4ZpBRbXB-ClBv3WTfr-r9RQ"
