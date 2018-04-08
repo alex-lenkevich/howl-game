@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"bytes"
-	"io"
 	"log"
-	"strings"
 	"io/ioutil"
 )
 
@@ -30,20 +28,32 @@ type OutMessage struct {
 	Text string `json:"text"`
 }
 
+var token = GetConfiguration().String("botToken")
+
 func InitWebhook(url string) {
 	reqBody, err := json.Marshal(WebhookRequest{url})
 	if err != nil {
 		log.Fatal(err)
 	}
-	sendRequest("setWebhook", bytes.NewReader(reqBody))
-	resp, err := sendRequest("getWebhookInfo", strings.NewReader("{}"))
+	var resp *http.Response
+	var body []byte
+	resp, err = sendRequest("setWebhook", reqBody)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err = ioutil.ReadAll(resp.Body)
 
-	log.Printf(string(body))
+	log.Printf("Response code " + resp.Status + " and body: " + string(body))
+
+	resp, err = sendRequest("getWebhookInfo", []byte("{}"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, err = ioutil.ReadAll(resp.Body)
+
+	log.Printf("Response: " + string(body))
 }
 
 func ProcessUpdates(body []byte) Update {
@@ -67,15 +77,16 @@ func SendMessage(to int64, msg string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := sendRequest("sendMessage", bytes.NewReader(body))
+	resp, err := sendRequest("sendMessage", body)
 	if err != nil {
 		log.Fatal(err)
 	}
 	resp.Body.Close()
 }
 
-func sendRequest(method string, body io.Reader) (resp *http.Response, err error)  {
-	url := fmt.Sprintf("https://api.telegram.org/bot589672797:AAFWeN_wUc7v206dIdFceK_6VjmB9C68O6Q/%s", method)
-	return http.Post(url, "application/json", body);
+func sendRequest(method string, body []byte) (resp *http.Response, err error)  {
+	url := fmt.Sprintf("https://api.telegram.org/%s/%s", token, method)
+	log.Println("POST " + url + " with body " + string(body))
+	return http.Post(url, "application/json", bytes.NewReader(body));
 }
 
