@@ -85,7 +85,7 @@ func SendMessage(to int64, msg string) {
 }
 
 func sendRequest(method string, body []byte) (resp *http.Response, err error)  {
-	url := fmt.Sprintf("https://api.telegram.org/%s/%s", token, method)
+	url := fmt.Sprintf("https://api.telegram.org/bot%s/%s", token, method)
 	log.Println("POST " + url + " with body " + string(body))
 	return http.Post(url, "application/json", bytes.NewReader(body));
 }
